@@ -37,6 +37,8 @@ public class ClienteController {
                     .Mail(clienteCreate.getMail())
                     .Nombre_Completo(clienteCreate.getNombre_Completo())
                     .Telefono(clienteCreate.getTelefono())
+                    .Direccion(clienteCreate.getDireccion())
+                    .DNI(clienteCreate.getDNI())
                     .build();
 
             return new ResponseEntity<>(
@@ -71,6 +73,8 @@ public class ClienteController {
                         .Mail(clienteUpdate.getMail())
                         .Nombre_Completo(clienteUpdate.getNombre_Completo())
                         .Telefono(clienteUpdate.getTelefono())
+                        .Direccion(clienteUpdate.getDireccion())
+                        .DNI(clienteUpdate.getDNI())
                         .build();
 
                 return new ResponseEntity<>(

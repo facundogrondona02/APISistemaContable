@@ -22,5 +22,8 @@ public class ClienteDTO implements Serializable {
 
     private String Telefono;
 
+    private String Direccion;
+
+    private String DNI;
 
 }

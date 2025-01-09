@@ -27,6 +27,8 @@ public class ClienteIMPL implements IClienteService {
                 .Mail(clienteDto.getMail())
                 .Nombre_Completo(clienteDto.getNombre_Completo())
                 .Telefono(clienteDto.getTelefono())
+                .Direccion(clienteDto.getDireccion())
+                .DNI(clienteDto.getDNI())
                 .build();
 
         return IclienteDao.save(cliente);

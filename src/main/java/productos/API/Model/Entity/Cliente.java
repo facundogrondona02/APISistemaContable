@@ -29,5 +29,10 @@ public class Cliente implements Serializable {
     @Column(name = "Telefono")
     private String Telefono;
 
+    @Column(name = "Direccion")
+    private String Direccion;
+
+    @Column(name= "DNI")
+    private String DNI;
 
 }
