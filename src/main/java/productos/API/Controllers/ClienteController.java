@@ -12,6 +12,7 @@ import productos.API.Model.Payload.Response;
 import productos.API.Service.IClienteService;
 import productos.API.Service.Implementaciones.ClienteIMPL;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -103,13 +104,20 @@ public class ClienteController {
 
     }
 
-    @DeleteMapping("cliente/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id){
+    @DeleteMapping("cliente")
+    public ResponseEntity<?> delete(@RequestBody ArrayList<Integer> ids){
 
-
+        ArrayList<Cliente> clientes = new  ArrayList<Cliente>();
         try{
-            Cliente cliente = clienteService.findById(id);
-            clienteService.delete(cliente);
+             ids.forEach(id -> {
+                     clientes.add(clienteService.findById(id));
+
+            });
+             clientes.forEach(cliente -> {
+                 if(cliente != null) {
+                     clienteService.delete(cliente);
+                 }
+             });
             return new ResponseEntity<>(Response.builder().mensaje("borrado correctamente").object(null).build(), HttpStatus.NO_CONTENT);
 
         }catch (DataAccessException dtx){
