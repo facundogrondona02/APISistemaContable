@@ -29,7 +29,7 @@ public class ClienteIMPL implements IClienteService {
                 .Nombre_Completo(clienteDto.getNombre_Completo())
                 .Telefono(clienteDto.getTelefono())
                 .Direccion(clienteDto.getDireccion())
-                .DNI(clienteDto.getDNI())
+                .Dni(clienteDto.getDni())
                 .build();
 
         return IclienteDao.save(cliente);

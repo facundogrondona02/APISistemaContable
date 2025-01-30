@@ -39,7 +39,7 @@ public class ClienteController {
                     .Nombre_Completo(clienteCreate.getNombre_Completo())
                     .Telefono(clienteCreate.getTelefono())
                     .Direccion(clienteCreate.getDireccion())
-                    .DNI(clienteCreate.getDNI())
+                    .Dni(clienteCreate.getDni())
                     .build();
 
             return new ResponseEntity<>(
@@ -75,7 +75,7 @@ public class ClienteController {
                         .Nombre_Completo(clienteUpdate.getNombre_Completo())
                         .Telefono(clienteUpdate.getTelefono())
                         .Direccion(clienteUpdate.getDireccion())
-                        .DNI(clienteUpdate.getDNI())
+                        .Dni(clienteUpdate.getDni())
                         .build();
 
                 return new ResponseEntity<>(
@@ -87,7 +87,7 @@ public class ClienteController {
             }else{
                 return  new ResponseEntity<>(
                         Response.builder().
-                                mensaje("no se encontro nada gil").
+                                mensaje("No existe este cliente").
                                 object(null)
                                 .build(),
                         HttpStatus.NOT_FOUND);

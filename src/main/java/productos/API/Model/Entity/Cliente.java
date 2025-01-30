@@ -33,6 +33,6 @@ public class Cliente implements Serializable {
     private String Direccion;
 
     @Column(name= "DNI")
-    private String DNI;
+    private String Dni;
 
 }

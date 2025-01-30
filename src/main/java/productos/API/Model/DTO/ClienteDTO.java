@@ -24,6 +24,6 @@ public class ClienteDTO implements Serializable {
 
     private String Direccion;
 
-    private String DNI;
+    private String Dni;
 
 }
