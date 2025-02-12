@@ -22,7 +22,7 @@ public class CategoriaIMPL implements ICategoriaService {
     @Override
     public Categoria save(CategoriaDTO categoriaDTO) {
 
-        Categoria cateoriaSave = Categoria.builder()
+        Categoria cateoriaSave = (Categoria)Categoria.builder()
                 .ID_Categoria(categoriaDTO.getID_Categoria())
                 .Categoria(categoriaDTO.getCategoria())
                 .build();

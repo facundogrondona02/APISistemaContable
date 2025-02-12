@@ -29,7 +29,7 @@ public class ProductoIMPL implements IProductoService {
         Categoria categoria = null;
 
         if(productoDTO.getCategoria() != null) {
-             categoria = categoriaDAO.findById(productoDTO.getCategoria()).orElse(null);
+             categoria = categoriaDAO.findById(productoDTO.getCategoria().getID_Categoria()).orElse(null);
         }
        ProductoEntity productoEntity = ProductoEntity.builder()
                .Id(productoDTO.getId())

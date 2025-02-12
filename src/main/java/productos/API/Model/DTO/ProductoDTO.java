@@ -21,7 +21,7 @@ public class ProductoDTO implements Serializable {
 
     private String Producto;
 
-    private Integer Categoria;
+    private CategoriaDTO Categoria;
 
     private Integer Stock;
 

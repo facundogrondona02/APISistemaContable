@@ -1,10 +1,13 @@
 package productos.API.Controllers;
 
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import productos.API.Model.Entity.Cliente;
 import productos.API.Model.Entity.ClienteDTO;
@@ -26,30 +29,29 @@ public class ClienteController {
     private IClienteService clienteService;
 
     @PostMapping("cliente")
-    public ResponseEntity<?> create(@RequestBody ClienteDTO clienteDto){
+    public ResponseEntity<?> create(@RequestBody @Valid ClienteDTO clienteDto){
         Cliente clienteCreate = null;
         try{
 
-            String nombreEnMayusculas = clienteDto.getNombre_Completo().toUpperCase();
-            clienteDto.setNombre_Completo(nombreEnMayusculas);
-             clienteCreate = clienteService.save(clienteDto);
-            ClienteDTO cliente = ClienteDTO.builder()
-                    .id(clienteCreate.getId())
-                    .Mail(clienteCreate.getMail())
-                    .Nombre_Completo(clienteCreate.getNombre_Completo())
-                    .Telefono(clienteCreate.getTelefono())
-                    .Direccion(clienteCreate.getDireccion())
-                    .Dni(clienteCreate.getDni())
-                    .build();
 
-            return new ResponseEntity<>(
-                    Response.builder()
-                            .mensaje("creado correctamente")
-                            .object(cliente)
-                            .build()
-                    , HttpStatus.CREATED);
 
-        }catch (DataAccessException dtx){
+                clienteCreate = clienteService.save(clienteDto);
+                ClienteDTO cliente = ClienteDTO.builder()
+                        .id(clienteCreate.getId())
+                        .Mail(clienteCreate.getMail())
+                        .Nombre_Completo(clienteCreate.getNombre_Completo())
+                        .Telefono(clienteCreate.getTelefono())
+                        .Direccion(clienteCreate.getDireccion())
+                        .Dni(clienteCreate.getDni())
+                        .build();
+
+                return new ResponseEntity<>(
+                        Response.builder()
+                                .mensaje("creado correctamente")
+                                .object(cliente)
+                                .build()
+                        , HttpStatus.CREATED);
+            }catch (DataAccessException dtx){
 
             return  new ResponseEntity<>(
                     Response.builder().

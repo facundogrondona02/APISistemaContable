@@ -1,13 +1,14 @@
 package productos.API.Model.DTO;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
+
 @Data
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoriaDTO implements Serializable {
 
 

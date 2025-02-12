@@ -2,6 +2,7 @@ package productos.API.Model.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import productos.API.Model.DTO.CategoriaDTO;
 
 import java.io.Serializable;
 
@@ -9,10 +10,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Builder
 @Entity
 @Table(name = "categorias")
-public class Categoria implements Serializable {
+public class Categoria extends CategoriaDTO implements Serializable {
 
     @Id
     @Column(name = "ID_Categoria")
@@ -21,7 +21,5 @@ public class Categoria implements Serializable {
 
     @Column(name = "Categoria")
     private String Categoria;
-
-
 
 }

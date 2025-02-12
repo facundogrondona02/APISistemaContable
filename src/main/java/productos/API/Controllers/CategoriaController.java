@@ -30,7 +30,7 @@ public class CategoriaController {
             String nombreMayuscula = categoriaDTO.getCategoria().toUpperCase();
             categoriaDTO.setCategoria(nombreMayuscula);
             categoriaFinal = categoriaService.save(categoriaDTO);
-            Categoria categoria = Categoria.builder()
+            Categoria categoria = (Categoria) Categoria.builder()
                     .Categoria(categoriaFinal.getCategoria())
                     .build();
 
@@ -63,7 +63,7 @@ public class CategoriaController {
             String nombreMayuscula = categoriaDTO.getCategoria().toUpperCase();
             categoriaDTO.setCategoria(nombreMayuscula);
             categoriaFinal = categoriaService.save(categoriaDTO);
-            Categoria categoria = Categoria.builder()
+            Categoria categoria = (Categoria)Categoria.builder()
                     .Categoria(categoriaFinal.getCategoria())
                     .build();
 

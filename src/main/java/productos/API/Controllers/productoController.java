@@ -46,7 +46,7 @@ public class productoController {
                        .Estado(productoEntityVer.isEstado())
                        .Precio(productoEntityVer.getPrecio())
                        .Descripcion(productoEntityVer.getDescripcion())
-                       .Categoria(categoria != null ? categoria.getID_Categoria() : null)
+                       .Categoria(categoria )
                        .build();
 
                return new ResponseEntity<>(Response.builder()
@@ -90,7 +90,7 @@ public class productoController {
                             .Estado(productoEntity.isEstado())
                             .Precio(productoEntity.getPrecio())
                             .Descripcion(productoEntity.getDescripcion())
-                            .Categoria(categoria != null ? categoria.getID_Categoria() : null )
+                            .Categoria(categoria)
                             .build();
 
                     return new ResponseEntity<>(
@@ -180,7 +180,7 @@ public class productoController {
                     .Estado(producto.isEstado())
                     .Precio(producto.getPrecio())
                     .Descripcion(producto.getDescripcion())
-                    .Categoria(categoria != null ? categoria.getID_Categoria() : null)
+                    .Categoria(producto.getCategoria())
                     .build();
 
             return new ResponseEntity<>(Response.builder()
@@ -216,7 +216,7 @@ public class productoController {
                         .Estado(producto.isEstado())
                         .Precio(producto.getPrecio())
                         .Descripcion(producto.getDescripcion())
-                        .Categoria(producto.getCategoria().getID_Categoria())
+                        .Categoria(producto.getCategoria())
                         .build();
 
                 productosFinal.add(producctosDTO);
