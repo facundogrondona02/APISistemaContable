@@ -1,5 +1,6 @@
 package productos.API.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -11,21 +12,19 @@ import productos.API.Model.Entity.ProductoEntity;
 import productos.API.Model.Payload.Response;
 import productos.API.Service.IProductoService;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/v1")
 @CrossOrigin(origins = "*")
-public class productoController {
+public class ProductoController {
 
     @Autowired
     private IProductoService productoService;
 
 
     @PostMapping("producto")
-    public ResponseEntity<?> create (@RequestBody ProductoDTO productoDTO){
+    public ResponseEntity<?> create (@RequestBody @Valid ProductoDTO productoDTO){
 
 
         ProductoEntity productoEntityVer = null;
@@ -34,7 +33,6 @@ public class productoController {
             productoDTO.setProducto(productoDTO.getProducto().toUpperCase());
 
 
-           if(productoDTO.getProducto() != "" && productoDTO.getPrecio() != null && productoDTO.getStock() != null) {
                productoEntityVer = productoService.save(productoDTO);
 
                Categoria categoria = productoEntityVer.getCategoria();
@@ -53,12 +51,7 @@ public class productoController {
                        .mensaje("Guardado con exito")
                        .object(producto)
                        .build(), HttpStatus.CREATED);
-           }else{
-               return new ResponseEntity<>(Response.builder()
-                       .mensaje("Hay campos obligatorios vacios")
-                       .object(null)
-                       .build(), HttpStatus.NOT_FOUND);
-           }
+
         }catch (DataAccessException dtx){
 
             return new ResponseEntity<>(
@@ -77,7 +70,6 @@ public class productoController {
     public ResponseEntity<?> update(@RequestBody ProductoDTO productoDTO, @PathVariable Integer id) {
         try {
             if (productoService.existProById(id)) {
-                if(productoDTO.getProducto() != ""  && productoDTO.getPrecio() != null && productoDTO.getStock() != null ) {
                     productoDTO.setProducto(productoDTO.getProducto().toUpperCase());
                     productoDTO.setId(id);
                     ProductoEntity productoEntity = productoService.save(productoDTO);
@@ -99,14 +91,7 @@ public class productoController {
                                     .object(producto)
                                     .build(),
                             HttpStatus.OK);
-                } else{
-                    return new ResponseEntity<>(
-                            Response.builder()
-                                    .mensaje("Hay campos obligatorios vacios")
-                                    .object(null)
-                                    .build(),
-                            HttpStatus.NOT_FOUND);
-                }
+
             } else {
                 return new ResponseEntity<>(
                         Response.builder()
@@ -133,14 +118,19 @@ public class productoController {
     }
 
 
-    @DeleteMapping("producto/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id ){
+    @DeleteMapping("producto")
+    public ResponseEntity<?> delete(@RequestBody ArrayList<Integer> ids ){
 
-
+     ArrayList<ProductoEntity> productos = new ArrayList<>();
         try{
-            ProductoEntity product = productoService.findProById(id);
-            productoService.delete(product);
-
+            ids.forEach(id ->{
+                  productos.add(productoService.findProById(id));
+            });
+            productos.forEach(producto -> {
+                if(producto != null) {
+                    productoService.delete(producto);
+                }
+            });
             return new ResponseEntity<>(Response.builder().mensaje("Borrado con exito").object(null).build(), HttpStatus.NO_CONTENT);
 
         }catch (DataAccessException dtx){
