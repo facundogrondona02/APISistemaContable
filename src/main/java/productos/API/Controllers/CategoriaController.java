@@ -93,11 +93,17 @@ public class CategoriaController {
     }
 
     @DeleteMapping("categoria")
-    public ResponseEntity<?> deleteCategoria(@RequestBody CategoriaDTO categoriaDTO){
+    public ResponseEntity<?> deleteCategoria(@RequestBody ArrayList<Integer> ids){
+
+        ArrayList<Categoria> categorias = new ArrayList<>();
 
         try{
-            Categoria categoria = categoriaService.findById(categoriaDTO.getID_Categoria());
-            categoriaService.delete(categoria);
+            ids.forEach( id ->{
+                  categorias.add(categoriaService.findById(id));
+            });
+            categorias.forEach(categoria -> {
+                categoriaService.delete(categoria);
+            });
             return new ResponseEntity<>(Response
                     .builder()
                     .mensaje("Eliminado con exito")
