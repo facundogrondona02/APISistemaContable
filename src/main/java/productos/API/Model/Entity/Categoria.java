@@ -5,14 +5,16 @@ import lombok.*;
 import productos.API.Model.DTO.CategoriaDTO;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
 @Table(name = "categorias")
-public class Categoria extends CategoriaDTO implements Serializable {
+public class Categoria implements Serializable {
 
     @Id
     @Column(name = "ID_Categoria")
@@ -21,5 +23,8 @@ public class Categoria extends CategoriaDTO implements Serializable {
 
     @Column(name = "Categoria")
     private String Categoria;
+
+//    @OneToMany(targetEntity = ProductoEntity.class)
+//    private List<ProductoEntity> ListaProductos;
 
 }

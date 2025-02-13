@@ -1,11 +1,13 @@
 package productos.API.Controllers;
 
 import jakarta.validation.Valid;
+import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import productos.API.Model.DTO.CategoriaDTO;
 import productos.API.Model.DTO.ProductoDTO;
 import productos.API.Model.Entity.Categoria;
 import productos.API.Model.Entity.ProductoEntity;
@@ -26,44 +28,52 @@ public class ProductoController {
     @PostMapping("producto")
     public ResponseEntity<?> create (@RequestBody @Valid ProductoDTO productoDTO){
 
-
         ProductoEntity productoEntityVer = null;
 
-        try{
+        try {
             productoDTO.setProducto(productoDTO.getProducto().toUpperCase());
 
+            // Guardar el producto en la base de datos
+            productoEntityVer = productoService.save(productoDTO);
 
-               productoEntityVer = productoService.save(productoDTO);
+            // Obtener la categoría desde el producto guardado
+            Categoria categoria = productoEntityVer.getCategoria();
 
-               Categoria categoria = productoEntityVer.getCategoria();
-               ProductoDTO producto = ProductoDTO.builder()
-                       .Id(productoEntityVer.getId())
-                       .Producto(productoEntityVer.getProducto())
-                       .Stock(productoEntityVer.getStock())
-                       .Stock_Min(productoEntityVer.getStock_Min())
-                       .Estado(productoEntityVer.isEstado())
-                       .Precio(productoEntityVer.getPrecio())
-                       .Descripcion(productoEntityVer.getDescripcion())
-                       .Categoria(categoria )
-                       .build();
+            // 🔹 Convertir Categoria a CategoriaDTO
+            // Crear CategoriaDTO sin usar builder
+            CategoriaDTO categoriaDTO = new CategoriaDTO(
+                    categoria.getID_Categoria(),
+                    categoria.getCategoria()
+            );
 
-               return new ResponseEntity<>(Response.builder()
-                       .mensaje("Guardado con exito")
-                       .object(producto)
-                       .build(), HttpStatus.CREATED);
 
-        }catch (DataAccessException dtx){
+            // Construir el ProductoDTO con la categoría convertida
+            ProductoDTO producto = ProductoDTO.builder()
+                    .Id(productoEntityVer.getId())
+                    .Producto(productoEntityVer.getProducto())
+                    .Stock(productoEntityVer.getStock())
+                    .Stock_Min(productoEntityVer.getStock_Min())
+                    .Estado(productoEntityVer.isEstado())
+                    .Precio(productoEntityVer.getPrecio())
+                    .Descripcion(productoEntityVer.getDescripcion())
+                    .Categoria(categoriaDTO) // ✅ Ahora pasamos un CategoriaDTO
+                    .build();
 
+            return new ResponseEntity<>(Response.builder()
+                    .mensaje("Guardado con éxito")
+                    .object(producto)
+                    .build(), HttpStatus.CREATED);
+
+        } catch (DataAccessException dtx) {
             return new ResponseEntity<>(
-                    Response.builder().
-                            mensaje(dtx.getMessage()).
-                            object(null)
+                    Response.builder()
+                            .mensaje(dtx.getMessage())
+                            .object(null)
                             .build(),
                     HttpStatus.METHOD_NOT_ALLOWED);
-
         }
-
     }
+
 
 
     @PutMapping("producto/{id}")
@@ -73,7 +83,7 @@ public class ProductoController {
                     productoDTO.setProducto(productoDTO.getProducto().toUpperCase());
                     productoDTO.setId(id);
                     ProductoEntity productoEntity = productoService.save(productoDTO);
-                    Categoria categoria = productoEntity.getCategoria();
+                    CategoriaDTO categoria = productoDTO.getCategoria();
                     ProductoDTO producto = ProductoDTO.builder()
                             .Id(productoEntity.getId())
                             .Producto(productoEntity.getProducto())
@@ -162,6 +172,14 @@ public class ProductoController {
         try{
             producto = productoService.findProById(id);
             Categoria categoria = producto.getCategoria();
+
+            // Crear CategoriaDTO sin usar builder
+            CategoriaDTO categoriaDTO = new CategoriaDTO(
+                    categoria.getID_Categoria(),
+                    categoria.getCategoria()
+            );
+
+
             ProductoDTO productoDTO = ProductoDTO.builder()
                     .Id(producto.getId())
                     .Producto(producto.getProducto())
@@ -170,7 +188,7 @@ public class ProductoController {
                     .Estado(producto.isEstado())
                     .Precio(producto.getPrecio())
                     .Descripcion(producto.getDescripcion())
-                    .Categoria(producto.getCategoria())
+                    .Categoria(categoriaDTO)
                     .build();
 
             return new ResponseEntity<>(Response.builder()
@@ -198,6 +216,16 @@ public class ProductoController {
             ArrayList<ProductoDTO> productosFinal = new ArrayList<ProductoDTO>();
             for(ProductoEntity producto: productosEntity){
 
+                Categoria categoria = producto.getCategoria();
+                // Crear CategoriaDTO sin usar builder
+                CategoriaDTO categoriaDTO = new CategoriaDTO(
+                        categoria.getID_Categoria(),
+                        categoria.getCategoria()
+                );
+
+
+
+
                 ProductoDTO  producctosDTO = ProductoDTO.builder()
                         .Id(producto.getId())
                         .Producto(producto.getProducto())
@@ -206,7 +234,7 @@ public class ProductoController {
                         .Estado(producto.isEstado())
                         .Precio(producto.getPrecio())
                         .Descripcion(producto.getDescripcion())
-                        .Categoria(producto.getCategoria())
+                        .Categoria(categoriaDTO)
                         .build();
 
                 productosFinal.add(producctosDTO);

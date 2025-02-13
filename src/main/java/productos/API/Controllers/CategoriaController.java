@@ -123,31 +123,24 @@ public class CategoriaController {
             return  new ResponseEntity<>(Response.builder().mensaje(ex.getMessage()).object(null).build(), HttpStatus.METHOD_NOT_ALLOWED);
         }
     }
-    @GetMapping("categorias/{categoria}")
-    public ResponseEntity<?> findByName(@PathVariable String categoria){
-        try {
-            String catMayus = categoria.toUpperCase();
-            ArrayList<Categoria> listaCate = categoriaService.findByName(catMayus);
-            ArrayList<CategoriaDTO> lista   = new ArrayList<>();
-            for (Categoria cat: listaCate){
-                CategoriaDTO categoriaDTO = CategoriaDTO.builder().ID_Categoria(cat.getID_Categoria()).Categoria(cat.getCategoria()).build();
-                lista.add(categoriaDTO);
-            }
-            return new ResponseEntity<>(Response.builder().mensaje("Buscado con exito").object(lista).build(), HttpStatus.OK);
-        }catch (DataAccessException ex){
-            return  new ResponseEntity<>(Response.builder().mensaje(ex.getMessage()).object(null).build(), HttpStatus.METHOD_NOT_ALLOWED);
-        }
-    }
+//    @GetMapping("categorias/{categoria}")
+//    public ResponseEntity<?> findByName(@PathVariable String categoria){
+//        try {
+//            String catMayus = categoria.toUpperCase();
+//            ArrayList<Categoria> listaCate = categoriaService.findByName(catMayus);
+//            ArrayList<CategoriaDTO> lista   = new ArrayList<>();
+//            for (Categoria cat: listaCate){
+//                CategoriaDTO categoriaDTO = CategoriaDTO.builder().ID_Categoria(cat.getID_Categoria()).Categoria(cat.getCategoria()).build();
+//                lista.add(categoriaDTO);
+//            }
+//            return new ResponseEntity<>(Response.builder().mensaje("Buscado con exito").object(lista).build(), HttpStatus.OK);
+//        }catch (DataAccessException ex){
+//            return  new ResponseEntity<>(Response.builder().mensaje(ex.getMessage()).object(null).build(), HttpStatus.METHOD_NOT_ALLOWED);
+//        }
+//    }
 
     @GetMapping("categoria/{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
-        if (id <= 0) {
-            return new ResponseEntity<>(Response.builder()
-                    .mensaje("ID de categoría inválido")
-                    .object(null)
-                    .build(), HttpStatus.BAD_REQUEST);
-        }
-
         try {
             Categoria categoria = categoriaService.findById(id);
 
@@ -158,10 +151,12 @@ public class CategoriaController {
                         .build(), HttpStatus.NOT_FOUND);
             }
 
-            CategoriaDTO categoriaDTO = CategoriaDTO.builder()
-                    .ID_Categoria(categoria.getID_Categoria())
-                    .Categoria(categoria.getCategoria())
-                    .build();
+            // Crear CategoriaDTO sin usar builder
+            CategoriaDTO categoriaDTO = new CategoriaDTO(
+                    categoria.getID_Categoria(),
+                    categoria.getCategoria()
+            );
+
 
             return new ResponseEntity<>(Response.builder()
                     .mensaje("Categoría encontrada con éxito")

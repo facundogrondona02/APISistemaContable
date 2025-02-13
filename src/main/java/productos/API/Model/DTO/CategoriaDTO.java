@@ -2,15 +2,15 @@ package productos.API.Model.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import productos.API.Model.Entity.Categoria;
 
 import java.io.Serializable;
 
 @Data
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoriaDTO implements Serializable {
+public class CategoriaDTO extends productos.API.Model.Entity.Categoria implements Serializable {
 
 
     private Integer ID_Categoria;

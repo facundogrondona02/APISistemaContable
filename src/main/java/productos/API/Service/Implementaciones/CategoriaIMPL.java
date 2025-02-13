@@ -21,14 +21,15 @@ public class CategoriaIMPL implements ICategoriaService {
     @Transactional
     @Override
     public Categoria save(CategoriaDTO categoriaDTO) {
-
-        Categoria cateoriaSave = (Categoria)Categoria.builder()
+        Categoria categoriaSave = Categoria.builder()
                 .ID_Categoria(categoriaDTO.getID_Categoria())
                 .Categoria(categoriaDTO.getCategoria())
                 .build();
 
-        return categoriaDAO.save(cateoriaSave);
+        return categoriaDAO.save(categoriaSave);
     }
+
+
 
     @Transactional(readOnly = true)
     @Override
