@@ -1,0 +1,10 @@
+[33m7e0b768[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mFacundo[m[33m, [m[1;31morigin/Facundo[m[33m)[m REFACT( CategoriaController ): Refactorize la estructura de eliminacion de las categorias asi puede eliminar mas de una al mismo tiempo
+[33mea50f72[m REFACT( ALL ): Modifique la estrucutura de CategoriaDTO
+[33mfdde4f3[m FEAT( ALL ); Cree las validaciones de los campos de productos y clientes
+[33m1cde99b[m FEAT( ALL ): Cambie la estructura de los DTO de productos y categorias para poder mostrar las categoria en los productos de manera mas facil
+[33maa18e25[m REFACTOR( ClienteController, Cliente, ClienteIMPL): Cambie el nombre de DNI a Dni para que me tome correctamente el nombre cuando consumo los datos desde el front
+[33mafcc1d1[m REFACTORY( Cliente ):Refactorize el controlador de clientes para que pueda tomar un array de ids de clientes para poder eliminar mas de un cliente a la vez
+[33mdcaef0c[m Modificamos la funciones para clientes, agregando campos
+[33m967929e[m creamos validacion por parte del backend para no crear porducto ni editarlo con campos obligatorios vacios
+[33m316714c[m Permitimos hacer busqueda de categoria por id
+[33mf1c8928[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m primer commit, hasta ahora tenemos la esturctura de la api Modelos, DTO, Iservice, Servicio implentacion y los contralodres
