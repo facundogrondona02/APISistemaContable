@@ -2,6 +2,7 @@ package productos.API.Model.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ManyToAny;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -35,4 +36,7 @@ public class Cliente implements Serializable {
     @Column(name= "DNI")
     private String Dni;
 
+    @ManyToOne // Relación muchos a uno con User
+    @JoinColumn(name = "Id_User", referencedColumnName = "Id") // Relación con la columna `Id_User` de `Cliente`, que es la clave foránea
+    private User user;
 }

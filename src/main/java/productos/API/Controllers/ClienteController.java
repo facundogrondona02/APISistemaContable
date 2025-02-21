@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -160,6 +162,7 @@ public class ClienteController {
     }
     @GetMapping("clientes")
     public ResponseEntity<?> findAll() {
+
         Iterable<Cliente> clientes = clienteService.findAll();
         if (clientes != null && clientes.iterator().hasNext()) {
             return new ResponseEntity<>(Response.builder()

@@ -32,20 +32,46 @@ public class UserController {
 
 
     @PostMapping("signup")
-    public ResponseEntity<AuthResponse> signup(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest){
 
         AuthResponse authResponse = AuthResponse.builder().build();
+        try{
+            AuthResponse token =authService.signup(signupRequest);
+            return new ResponseEntity<>(Response.builder()
+                    .mensaje("Registro exitoso")
+                    .object(token)
+                    .build(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(Response.builder()
+                    .mensaje("Hay campos no validos")
+                    .object(null)
+                    .build(), HttpStatus.BAD_REQUEST
+            );
+        }
 
-        return ResponseEntity.ok(authService.signup(signupRequest));
     }
 
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 
-        AuthResponse authResponse = AuthResponse.builder().build();
 
-        return ResponseEntity.ok(authService.login(loginRequest));
+        try{
+            AuthResponse token = authService.login(loginRequest);
+
+            return new ResponseEntity<>(Response.builder()
+                    .mensaje("Inicio de sesion exitoso")
+                    .object(token)
+                    .build(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(Response.builder()
+                    .mensaje("Usuario o contraseña son incorrectos")
+                    .object(null)
+                .build(), HttpStatus.BAD_REQUEST
+            );
+        }
+
+
     }
 
 //    @GetMapping("user/{username}")

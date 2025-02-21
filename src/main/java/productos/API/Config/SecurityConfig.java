@@ -12,8 +12,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import productos.API.Jwt.JwtAuthenticationFilter;
 import productos.API.Model.DAO.IUserDAO;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,33 +33,12 @@ public class SecurityConfig {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/auth/**") // 👈 Permite TODO lo que empiece con /auth/
-//                        .permitAll()
-//                        .requestMatchers("/api/v1/**") // 👈 Requiere autenticación
-//                        .authenticated()
-//                        .requestMatchers(
-//                                "/swagger-ui/**",
-//                                "/v3/api-docs/**",
-//                                "/swagger-resources/**",
-//                                "/webjars/**"
-//                        ).authenticated()
-//                )
-//                .httpBasic(Customizer.withDefaults()) // 👈 Permite autenticación básica
-//.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.permitAll())
-//                .csrf(csrf -> csrf.disable());
-//
-//        return httpSecurity.build();
-//    }
-    ///////////////////////////
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(crsf -> crsf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
@@ -71,34 +55,21 @@ public class SecurityConfig {
 
         return httpSecurity.build();
     }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // ⚡ Puerto de React
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
-    ///////////////////////////
-
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//
-//        return username -> userDAO.findAll().stream().filter(user -> user.getUsername().equals(username))
-//                .findFirst()
-//                .map(user -> org.springframework.security.core.userdetails.User.builder()
-//                        .username(user.getUsername())
-//                        .password(user.getPassword())
-//                        .roles(user.getRoles().toUpperCase()) // Agregar el prefijo si falta
-//                        .build())
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//    }
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 
-//@Bean
-//public UserDetailsService userDetailsService() {
-//    UserDetails userDetails = User.withDefaultPasswordEncoder()
-//            .username("user")
-//            .password("password")
-//            .roles("ADMIN")
-//            .build();
-//
-//    return new InMemoryUserDetailsManager(userDetails);
-//}
+
 
 }
 

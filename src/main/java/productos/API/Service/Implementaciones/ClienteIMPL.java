@@ -1,6 +1,8 @@
 package productos.API.Service.Implementaciones;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import productos.API.Model.DAO.IClienteDAO;
@@ -18,6 +20,9 @@ public class ClienteIMPL implements IClienteService {
 
     @Autowired
     private IClienteDAO IclienteDao;
+
+    @Autowired
+    private ObtenerUsernameToken obtenerUsernameToken;
 
     @Transactional
     @Override
@@ -54,7 +59,8 @@ public class ClienteIMPL implements IClienteService {
 
     @Override
     public Iterable<Cliente> findAll() {
-        return IclienteDao.findAll();
+         String username =obtenerUsernameToken.findUserByToken();
+        return IclienteDao.findByUser_Username(username);
     }
 
     @Override
