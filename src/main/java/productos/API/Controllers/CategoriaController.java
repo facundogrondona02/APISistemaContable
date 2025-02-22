@@ -32,6 +32,7 @@ public class CategoriaController {
             categoriaFinal = categoriaService.save(categoriaDTO);
             Categoria categoria = (Categoria) Categoria.builder()
                     .Categoria(categoriaFinal.getCategoria())
+                    .user(categoriaFinal.getUser())
                     .build();
 
             return new ResponseEntity<>(Response

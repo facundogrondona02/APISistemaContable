@@ -19,10 +19,14 @@ public class Categoria implements Serializable {
     @Id
     @Column(name = "ID_Categoria")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ID_Categoria;
+     Integer ID_Categoria;
 
     @Column(name = "Categoria")
-    private String Categoria;
+     String Categoria;
+
+    @ManyToOne
+    @JoinColumn(name= "Id_User", nullable = true)
+    User user;
 
 //    @OneToMany(targetEntity = ProductoEntity.class)
 //    private List<ProductoEntity> ListaProductos;

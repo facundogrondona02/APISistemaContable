@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import productos.API.Model.DAO.ICategoriaDAO;
+import productos.API.Model.DAO.IUserDAO;
 import productos.API.Model.DTO.CategoriaDTO;
 import productos.API.Model.Entity.Categoria;
+import productos.API.Model.Entity.User;
 import productos.API.Service.ICategoriaService;
 
 import java.util.ArrayList;
@@ -18,12 +20,21 @@ public class CategoriaIMPL implements ICategoriaService {
     @Autowired
     private ICategoriaDAO categoriaDAO;
 
+    @Autowired
+    private ObtenerUsernameToken obtenerUsernameToken;
+
+    @Autowired
+    private IUserDAO userDAO;
+
     @Transactional
     @Override
     public Categoria save(CategoriaDTO categoriaDTO) {
+        String username = obtenerUsernameToken.findUserByToken();
+        User user = userDAO.findByUsername(username).orElseThrow();
         Categoria categoriaSave = Categoria.builder()
                 .ID_Categoria(categoriaDTO.getID_Categoria())
                 .Categoria(categoriaDTO.getCategoria())
+                .user(user)
                 .build();
 
         return categoriaDAO.save(categoriaSave);
@@ -53,7 +64,8 @@ public class CategoriaIMPL implements ICategoriaService {
     @Transactional
     @Override
     public Iterable<Categoria> findAll() {
-        return categoriaDAO.findAll();
+        String username = obtenerUsernameToken.findUserByToken();
+    return categoriaDAO.findByUser_Username(username);
     }
 
     @Transactional

@@ -56,7 +56,7 @@ public class ProductoController {
                     .Estado(productoEntityVer.isEstado())
                     .Precio(productoEntityVer.getPrecio())
                     .Descripcion(productoEntityVer.getDescripcion())
-                    .Categoria(categoriaDTO) // ✅ Ahora pasamos un CategoriaDTO
+                    .Categoria(categoriaDTO)
                     .build();
 
             return new ResponseEntity<>(Response.builder()
@@ -70,7 +70,7 @@ public class ProductoController {
                             .mensaje(dtx.getMessage())
                             .object(null)
                             .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
+                    HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -6,8 +6,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import productos.API.Model.DAO.IClienteDAO;
+import productos.API.Model.DAO.IUserDAO;
 import productos.API.Model.Entity.Cliente;
 import productos.API.Model.Entity.ClienteDTO;
+import productos.API.Model.Entity.User;
 import productos.API.Service.IClienteService;
 
 import java.lang.reflect.Array;
@@ -24,10 +26,14 @@ public class ClienteIMPL implements IClienteService {
     @Autowired
     private ObtenerUsernameToken obtenerUsernameToken;
 
+    @Autowired
+    private IUserDAO userDAO;
+
     @Transactional
     @Override
     public Cliente save(ClienteDTO clienteDto) {
-
+        String username =obtenerUsernameToken.findUserByToken();
+        User user = userDAO.findByUsername(username).orElseThrow();
         Cliente cliente = Cliente.builder()
                 .id(clienteDto.getId())
                 .Mail(clienteDto.getMail())
@@ -35,6 +41,7 @@ public class ClienteIMPL implements IClienteService {
                 .Telefono(clienteDto.getTelefono())
                 .Direccion(clienteDto.getDireccion())
                 .Dni(clienteDto.getDni())
+                .user(user)
                 .build();
 
         return IclienteDao.save(cliente);
