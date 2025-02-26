@@ -1,9 +1,11 @@
 package productos.API.Controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import productos.API.Model.DTO.CategoriaDTO;
 import productos.API.Model.Entity.Categoria;
@@ -20,9 +22,14 @@ public class CategoriaController {
     @Autowired
     private ICategoriaService categoriaService;
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return new  ResponseEntity<>(Response.builder().mensaje(errorMessage).object(null).build(), HttpStatus.BAD_REQUEST);
+    }
 
     @PostMapping("categoria")
-    public ResponseEntity<?> crearCategoria(@RequestBody CategoriaDTO categoriaDTO){
+    public ResponseEntity<?> crearCategoria(@RequestBody @Valid CategoriaDTO categoriaDTO){
 
         Categoria categoriaFinal = null;
 
@@ -37,7 +44,7 @@ public class CategoriaController {
 
             return new ResponseEntity<>(Response
                     .builder()
-                    .mensaje("Creado con exito")
+                    .mensaje("Categoria creada correctamente!!!")
                     .object(categoria)
                     .build(), HttpStatus.CREATED);
 
@@ -55,7 +62,7 @@ public class CategoriaController {
     }
 
     @PutMapping("categoria")
-    public ResponseEntity<?> actualizarCategoria(@RequestBody CategoriaDTO categoriaDTO){
+    public ResponseEntity<?> actualizarCategoria(@RequestBody @Valid  CategoriaDTO categoriaDTO){
 
         Categoria categoriaFinal = null;
 
@@ -70,14 +77,14 @@ public class CategoriaController {
 
             return new ResponseEntity<>(Response
                     .builder()
-                    .mensaje("Actualizado con exito")
+                    .mensaje("Categoria actualizado correctamente!!!")
                     .object(categoria)
                     .build(), HttpStatus.CREATED);
 
         }else{
             return new ResponseEntity<>( Response
                     .builder()
-                    .mensaje("no existe el produccto que queres modificar")
+                    .mensaje("No se encontro esta categoria")
                     .object(null)
                     .build(), HttpStatus.NOT_FOUND
             );
@@ -107,16 +114,16 @@ public class CategoriaController {
             });
             return new ResponseEntity<>(Response
                     .builder()
-                    .mensaje("Eliminado con exito")
+                    .mensaje("Categoria borrada correctamente!!!")
                     .object(null)
-                    .build(), HttpStatus.NO_CONTENT
+                    .build(), HttpStatus.OK
             );
         }catch (DataAccessException ex){
             return new ResponseEntity<>(Response
                     .builder()
                     .mensaje(ex.getMessage())
                     .object(null)
-                    .build(), HttpStatus.METHOD_NOT_ALLOWED
+                .build(), HttpStatus.BAD_REQUEST
             );
         }
     }
@@ -125,7 +132,7 @@ public class CategoriaController {
     public ResponseEntity<?> findAll(){
         try {
             Iterable<Categoria> lista   = categoriaService.findAll();
-            return new ResponseEntity<>(Response.builder().mensaje("Buscado con exito").object(lista).build(), HttpStatus.OK);
+            return new ResponseEntity<>(Response.builder().mensaje("Categorias encontradas con exito!!!").object(lista).build(), HttpStatus.OK);
         }catch (DataAccessException ex){
             return  new ResponseEntity<>(Response.builder().mensaje(ex.getMessage()).object(null).build(), HttpStatus.METHOD_NOT_ALLOWED);
         }
@@ -166,7 +173,7 @@ public class CategoriaController {
 
 
             return new ResponseEntity<>(Response.builder()
-                    .mensaje("Categoría encontrada con éxito")
+                    .mensaje("Categoría encontrada con éxito!!!")
                     .object(categoriaDTO)
                     .build(), HttpStatus.OK);
         } catch (DataAccessException ex) {

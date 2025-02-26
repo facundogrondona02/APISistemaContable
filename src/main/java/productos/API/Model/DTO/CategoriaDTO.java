@@ -16,7 +16,7 @@ public class CategoriaDTO extends productos.API.Model.Entity.Categoria implement
     private Integer ID_Categoria;
 
     @NonNull
-    @NotBlank(message = "No puedo ser nulo!!!")
+    @NotBlank(message = "El nombre de la categoria es obligatorio!!!")
     private String Categoria;
 
 }

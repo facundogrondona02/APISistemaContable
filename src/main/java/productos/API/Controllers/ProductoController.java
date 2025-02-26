@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import productos.API.Model.DTO.CategoriaDTO;
 import productos.API.Model.DTO.ProductoDTO;
@@ -24,6 +25,12 @@ public class ProductoController {
     @Autowired
     private IProductoService productoService;
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return new  ResponseEntity<>(Response.builder().mensaje(errorMessage).object(null).build(), HttpStatus.BAD_REQUEST);
+    }
+
 
     @PostMapping("producto")
     public ResponseEntity<?> create (@RequestBody @Valid ProductoDTO productoDTO){
@@ -33,21 +40,16 @@ public class ProductoController {
         try {
             productoDTO.setProducto(productoDTO.getProducto().toUpperCase());
 
-            // Guardar el producto en la base de datos
             productoEntityVer = productoService.save(productoDTO);
 
-            // Obtener la categoría desde el producto guardado
             Categoria categoria = productoEntityVer.getCategoria();
 
-            // 🔹 Convertir Categoria a CategoriaDTO
-            // Crear CategoriaDTO sin usar builder
             CategoriaDTO categoriaDTO = new CategoriaDTO(
                     categoria.getID_Categoria(),
                     categoria.getCategoria()
             );
 
 
-            // Construir el ProductoDTO con la categoría convertida
             ProductoDTO producto = ProductoDTO.builder()
                     .Id(productoEntityVer.getId())
                     .Producto(productoEntityVer.getProducto())
@@ -60,14 +62,14 @@ public class ProductoController {
                     .build();
 
             return new ResponseEntity<>(Response.builder()
-                    .mensaje("Guardado con éxito")
+                    .mensaje("Producto creado correctamente!!!")
                     .object(producto)
                     .build(), HttpStatus.CREATED);
 
         } catch (DataAccessException dtx) {
             return new ResponseEntity<>(
                     Response.builder()
-                            .mensaje(dtx.getMessage())
+                            .mensaje("")
                             .object(null)
                             .build(),
                     HttpStatus.BAD_REQUEST);
@@ -77,7 +79,7 @@ public class ProductoController {
 
 
     @PutMapping("producto/{id}")
-    public ResponseEntity<?> update(@RequestBody ProductoDTO productoDTO, @PathVariable Integer id) {
+    public ResponseEntity<?> update(@RequestBody @Valid ProductoDTO productoDTO, @PathVariable Integer id) {
         try {
             if (productoService.existProById(id)) {
                     productoDTO.setProducto(productoDTO.getProducto().toUpperCase());
@@ -97,7 +99,7 @@ public class ProductoController {
 
                     return new ResponseEntity<>(
                             Response.builder()
-                                    .mensaje("Actualizado con éxito")
+                                    .mensaje("Producto actualizado correctamente!!!")
                                     .object(producto)
                                     .build(),
                             HttpStatus.OK);
@@ -105,7 +107,7 @@ public class ProductoController {
             } else {
                 return new ResponseEntity<>(
                         Response.builder()
-                                .mensaje("Producto no encontrado")
+                                .mensaje("No se encontro este producto")
                                 .object(null)
                                 .build(),
                         HttpStatus.NOT_FOUND);
@@ -141,11 +143,11 @@ public class ProductoController {
                     productoService.delete(producto);
                 }
             });
-            return new ResponseEntity<>(Response.builder().mensaje("Borrado con exito").object(null).build(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(Response.builder().mensaje("Producto borrado correctamente!!!").object(null).build(), HttpStatus.OK);
 
         }catch (DataAccessException dtx){
 
-            return new ResponseEntity<>(Response.builder().mensaje(dtx.getMessage()).object(null).build(), HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<>(Response.builder().mensaje(dtx.getMessage()).object(null).build(), HttpStatus.BAD_REQUEST);
 
         }
 
@@ -158,9 +160,9 @@ public class ProductoController {
 
         Iterable<ProductoEntity> productos = productoService.findProAll();
         if(productos != null){
-            return new ResponseEntity<>(Response.builder().mensaje("Encontrados con exito").object(productos).build(),HttpStatus.OK);
+            return new ResponseEntity<>(Response.builder().mensaje("Productos encontrados con exito!!!").object(productos).build(),HttpStatus.OK);
         }else{
-            return new ResponseEntity<>(Response.builder().mensaje("No se encontraron productos").object(null).build(),HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<>(Response.builder().mensaje("No hay productos existentes").object(null).build(),HttpStatus.METHOD_NOT_ALLOWED);
 
         }
     }
@@ -192,7 +194,7 @@ public class ProductoController {
                     .build();
 
             return new ResponseEntity<>(Response.builder()
-                    .mensaje("Encontrado con exito")
+                    .mensaje("Encontrado correctamente")
                     .object(productoDTO)
                     .build(), HttpStatus.OK);
 

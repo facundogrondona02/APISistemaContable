@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import productos.API.Model.Entity.Cliente;
 import productos.API.Model.Entity.ClienteDTO;
@@ -30,6 +31,14 @@ public class ClienteController {
     @Autowired
     private IClienteService clienteService;
 
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return new  ResponseEntity<>(Response.builder().mensaje(errorMessage).object(null).build(), HttpStatus.BAD_REQUEST);
+    }
+
+
     @PostMapping("cliente")
     public ResponseEntity<?> create(@RequestBody @Valid ClienteDTO clienteDto){
         Cliente clienteCreate = null;
@@ -49,24 +58,24 @@ public class ClienteController {
 
                 return new ResponseEntity<>(
                         Response.builder()
-                                .mensaje("creado correctamente")
+                                .mensaje("Cliente creado correctamente!!!")
                                 .object(cliente)
                                 .build()
                         , HttpStatus.CREATED);
-            }catch (DataAccessException dtx){
+            }catch (Exception e){
 
             return  new ResponseEntity<>(
                     Response.builder().
-                            mensaje(dtx.getMessage()).
+                            mensaje("Error al crear el cliente").
                             object(null)
                             .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
+                    HttpStatus.BAD_REQUEST);
         }
 
     }
 
     @PutMapping("cliente/{id}")
-    public ResponseEntity<?> update(@RequestBody ClienteDTO clienteDto,@PathVariable Integer id){
+    public ResponseEntity<?> update(@RequestBody @Valid ClienteDTO clienteDto,@PathVariable Integer id){
         Cliente clienteUpdate = null;
 
         try{
@@ -84,14 +93,14 @@ public class ClienteController {
 
                 return new ResponseEntity<>(
                         Response.builder()
-                                .mensaje("actualizado correctamente")
+                                .mensaje("Cliente actualizado correctamente!!!")
                                 .object(cliente)
                                 .build()
                         , HttpStatus.CREATED);
             }else{
                 return  new ResponseEntity<>(
                         Response.builder().
-                                mensaje("No existe este cliente").
+                                mensaje("No se encontro este cliente").
                                 object(null)
                                 .build(),
                         HttpStatus.NOT_FOUND);
@@ -100,10 +109,10 @@ public class ClienteController {
 
             return  new ResponseEntity<>(
                     Response.builder().
-                            mensaje(dtx.getMessage()).
+                            mensaje("Error al editar el cliente").
                             object(null)
                             .build(),
-                    HttpStatus.METHOD_NOT_ALLOWED);
+                    HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -122,14 +131,14 @@ public class ClienteController {
                      clienteService.delete(cliente);
                  }
              });
-            return new ResponseEntity<>(Response.builder().mensaje("borrado correctamente").object(null).build(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(Response.builder().mensaje("Cliente borrado correctamente!!!").object(null).build(), HttpStatus.OK);
 
         }catch (DataAccessException dtx){
             return new ResponseEntity<>(
                     Response.builder()
-                    .mensaje(dtx.getMessage())
+                    .mensaje("No se pudo eliminar el cliente")
                     .object(null)
-                    .build(),HttpStatus.METHOD_NOT_ALLOWED);
+                    .build(),HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -154,7 +163,7 @@ public class ClienteController {
                     .build();
             return new ResponseEntity<>(
                     Response.builder()
-                            .mensaje("buscado correctamente")
+                            .mensaje("Cliente encontrado correctamente!!!")
                             .object(cliente)
                             .build()
                     , HttpStatus.OK);
@@ -166,12 +175,12 @@ public class ClienteController {
         Iterable<Cliente> clientes = clienteService.findAll();
         if (clientes != null && clientes.iterator().hasNext()) {
             return new ResponseEntity<>(Response.builder()
-                    .mensaje("")
+                    .mensaje("Clientes encontrados con exito!!!")
                     .object(clientes)
                     .build(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(Response.builder()
-                    .mensaje("No se encontró nada")
+                    .mensaje("No hay clientes existentes")
                     .object(null)
                     .build(), HttpStatus.NOT_FOUND);
         }
