@@ -35,8 +35,6 @@ public class ProductoIMPL implements IProductoService {
     public ProductoEntity save(ProductoDTO productoDTO) {
         try {
             String username = obtenerUsernameToken.findUserByToken();
-            System.out.println("Usuario autenticado: " + username);
-
             User user = userDAO.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
 
