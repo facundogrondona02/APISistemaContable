@@ -1,17 +1,22 @@
 package productos.API.Model.DTO;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+import productos.API.Model.Entity.Categoria;
 
 import java.io.Serializable;
+
 @Data
 @ToString
-@Builder
-public class CategoriaDTO implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CategoriaDTO extends productos.API.Model.Entity.Categoria implements Serializable {
 
 
-    private Integer id;
+    private Integer ID_Categoria;
+
+    @NonNull
+    @NotBlank(message = "El nombre de la categoria es obligatorio!!!")
     private String Categoria;
 
 }

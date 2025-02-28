@@ -2,14 +2,16 @@ package productos.API.Model.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import productos.API.Model.DTO.CategoriaDTO;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "categorias")
 public class Categoria implements Serializable {
@@ -17,11 +19,16 @@ public class Categoria implements Serializable {
     @Id
     @Column(name = "ID_Categoria")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ID_Categoria;
+     Integer ID_Categoria;
 
     @Column(name = "Categoria")
-    private String Categoria;
+     String Categoria;
 
+    @ManyToOne
+    @JoinColumn(name= "Id_User", nullable = true)
+    User user;
 
+//    @OneToMany(targetEntity = ProductoEntity.class)
+//    private List<ProductoEntity> ListaProductos;
 
 }

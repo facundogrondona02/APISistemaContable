@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import productos.API.Model.DAO.ICategoriaDAO;
 import productos.API.Model.DAO.IProductoDAO;
+import productos.API.Model.DAO.IUserDAO;
 import productos.API.Model.DTO.ProductoDTO;
 import productos.API.Model.Entity.Categoria;
 import productos.API.Model.Entity.ProductoEntity;
+import productos.API.Model.Entity.User;
 import productos.API.Service.ICategoriaService;
 import productos.API.Service.IProductoService;
 
@@ -22,26 +24,51 @@ public class ProductoIMPL implements IProductoService {
     @Autowired
     private ICategoriaDAO categoriaDAO;
 
+    @Autowired
+    private ObtenerUsernameToken obtenerUsernameToken;
+
+    @Autowired
+    private IUserDAO userDAO;
+
     @Transactional
     @Override
     public ProductoEntity save(ProductoDTO productoDTO) {
+        try {
+            String username = obtenerUsernameToken.findUserByToken();
+            User user = userDAO.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
 
-        Categoria categoria = categoriaDAO.findById(productoDTO.getCategoria()).orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada"));
+            Categoria categoria = null;
+            if (productoDTO.getCategoria() != null) {
+                categoria = categoriaDAO.findById(productoDTO.getCategoria().getID_Categoria()).orElse(null);
+                if (categoria == null) {
+                    throw new RuntimeException("Categoría no encontrada: " + productoDTO.getCategoria().getID_Categoria());
+                }
+            }
 
-       ProductoEntity productoEntity = ProductoEntity.builder()
-               .Id(productoDTO.getId())
-               .Producto(productoDTO.getProducto())
-               .Stock(productoDTO.getStock())
-               .Stock_Min(productoDTO.getStock_Min())
-               .Estado(productoDTO.isEstado())
-               .Precio(productoDTO.getPrecio())
-               .Descripcion(productoDTO.getDescripcion())
-               .Categoria(categoria)
-               .build();
+            ProductoEntity productoEntity = ProductoEntity.builder()
+                    .Id(productoDTO.getId())
+                    .Producto(productoDTO.getProducto())
+                    .Stock(productoDTO.getStock())
+                    .Stock_Min(productoDTO.getStock_Min())
+                    .Estado(productoDTO.isEstado())
+                    .Precio(productoDTO.getPrecio())
+                    .Descripcion(productoDTO.getDescripcion())
+                    .Categoria(categoria)
+                    .user(user)
+                    .build();
 
-       return productoDAO.save(productoEntity);
+            System.out.println("Guardando producto: " + productoEntity);
+            ProductoEntity savedProduct = productoDAO.save(productoEntity);
+            System.out.println("Producto guardado con ID: " + savedProduct.getId());
 
-   }
+            return savedProduct;
+        } catch (Exception e) {
+            System.err.println("Error guardando producto: " + e.getMessage());
+            throw e;
+        }
+    }
+
 
     @Transactional(readOnly = true)
     @Override
@@ -80,7 +107,8 @@ public class ProductoIMPL implements IProductoService {
 
     @Override
     public Iterable<ProductoEntity> findProAll() {
-        return productoDAO.findAll();
+        String username = obtenerUsernameToken.findUserByToken();
+        return productoDAO.findByUser_Username(username);
     }
 
 

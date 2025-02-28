@@ -18,28 +18,33 @@ public class ProductoEntity implements Serializable {
     @Id
     @Column(name = "ID_Productos")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+     Integer Id;
 
     @Column(name = "Productos")
-    private String Producto;
+     String Producto;
 
 
     @Column(name = "Stock")
-    private Integer Stock;
+     Integer Stock;
 
     @Column(name = "Stock_Min")
-    private Integer Stock_Min;
+     Integer Stock_Min;
 
     @Column(name = "Estado")
-    private boolean Estado;
+     boolean Estado;
 
     @Column(name = "Precio")
-    private Integer Precio;
+     Integer Precio;
 
     @Column(name = "Descripcion")
-    private String Descripcion;
+     String Descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "ID_Categoria")
-    private Categoria Categoria;
+    @JoinColumn(name = "ID_Categoria", nullable = true)
+     Categoria Categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "Id_User", nullable = true)
+     User user;
+
 }
