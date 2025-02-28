@@ -9,11 +9,13 @@ import productos.API.Model.DAO.IProductoDAO;
 import productos.API.Model.DAO.IProveedoresDAO;
 import productos.API.Model.DAO.IUserDAO;
 import productos.API.Model.DTO.ComprasDTO;
+import productos.API.Model.DTO.TransaccionesDTO;
 import productos.API.Model.Entity.Compras;
 import productos.API.Model.Entity.ProductoEntity;
 import productos.API.Model.Entity.Proveedores;
 import productos.API.Model.Entity.User;
 import productos.API.Service.IComprasService;
+import productos.API.Service.ITransaccionesService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,7 @@ public class ComprasIMPL implements IComprasService {
 
     @Autowired
     private IUserDAO userDAO;
+
 
     public static Date convertirFecha(String fechaStr) throws ParseException {
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
@@ -73,6 +76,8 @@ public class ComprasIMPL implements IComprasService {
                     .tipoTransaccion(comprasDTO.getTipoTransaccion())
                     .user(user)
                     .build();
+
+
 
             return comprasDAO.save(compras);
 

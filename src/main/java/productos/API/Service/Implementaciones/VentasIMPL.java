@@ -7,11 +7,10 @@ import productos.API.Model.DAO.IClienteDAO;
 import productos.API.Model.DAO.IProductoDAO;
 import productos.API.Model.DAO.IUserDAO;
 import productos.API.Model.DAO.IVentasDAO;
+import productos.API.Model.DTO.TransaccionesDTO;
 import productos.API.Model.DTO.VentasDTO;
-import productos.API.Model.Entity.Cliente;
-import productos.API.Model.Entity.ProductoEntity;
-import productos.API.Model.Entity.User;
-import productos.API.Model.Entity.Ventas;
+import productos.API.Model.Entity.*;
+import productos.API.Service.ITransaccionesService;
 import productos.API.Service.IVentasService;
 
 import java.text.ParseException;
@@ -36,6 +35,7 @@ public class VentasIMPL implements IVentasService {
 
     @Autowired
     private IClienteDAO clienteDAO;
+
 
     public static Date convertirFecha(String fechaStr) throws ParseException {
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
@@ -75,7 +75,13 @@ public class VentasIMPL implements IVentasService {
                 .user(user)
                 .build();
          ventasDAO.save(ventas);
-        return ventas;
+
+
+
+
+         return ventas;
+
+
 
     }
 

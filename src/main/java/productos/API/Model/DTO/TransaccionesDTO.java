@@ -12,27 +12,21 @@ import java.util.Date;
 @Data
 @Builder
 public class TransaccionesDTO {
-    Integer Id;
+    String Id;
 
-    @Column(name ="Entidad")
+    String TipoTransaccion;
+
     String Entidad;
 
-    @Column(name ="Objeto")
     String Objeto;
 
-    @Column(name ="Cantidad")
     Integer Cantidad;
 
-    @Column(name ="Dinero")
-    Integer Dinero;
+    Integer Precio;
 
-    @Column(name ="Fecha")
-    Date Fecha;
+    String Fecha;
 
-    @Column(name ="Pendiente")
-    boolean Pendiente;
+    Boolean Pendiente;
 
-    @ManyToOne
-    @JoinColumn(name = "Id_User")
-    productos.API.Model.Entity.User User;
+     User User;
 }
