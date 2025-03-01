@@ -40,9 +40,9 @@ public class ProductoIMPL implements IProductoService {
 
             Categoria categoria = null;
             if (productoDTO.getCategoria() != null) {
-                categoria = categoriaDAO.findById(productoDTO.getCategoria().getID_Categoria()).orElse(null);
+                categoria = categoriaDAO.findById(productoDTO.getCategoria().getId()).orElse(null);
                 if (categoria == null) {
-                    throw new RuntimeException("Categoría no encontrada: " + productoDTO.getCategoria().getID_Categoria());
+                    throw new RuntimeException("Categoría no encontrada: " + productoDTO.getCategoria().getId());
                 }
             }
 

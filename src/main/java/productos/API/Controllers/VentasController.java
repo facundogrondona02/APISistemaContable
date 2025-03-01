@@ -90,7 +90,7 @@ public class VentasController {
                     ventasService.delete(venta);
                 }
             });
-            return new ResponseEntity<>(Response.builder().mensaje("Producto borrado correctamente!!!").object(null).build(), HttpStatus.OK);
+            return new ResponseEntity<>(Response.builder().mensaje("Ventas eliminadas correctamente!!!").object(null).build(), HttpStatus.OK);
 
         }catch (DataAccessException dtx){
 

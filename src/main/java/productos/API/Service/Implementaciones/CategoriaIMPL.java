@@ -32,7 +32,7 @@ public class CategoriaIMPL implements ICategoriaService {
         String username = obtenerUsernameToken.findUserByToken();
         User user = userDAO.findByUsername(username).orElseThrow();
         Categoria categoriaSave = Categoria.builder()
-                .ID_Categoria(categoriaDTO.getID_Categoria())
+                .Id(categoriaDTO.getId())
                 .Categoria(categoriaDTO.getCategoria())
                 .user(user)
                 .build();

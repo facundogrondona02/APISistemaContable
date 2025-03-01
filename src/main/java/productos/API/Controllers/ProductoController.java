@@ -45,7 +45,7 @@ public class ProductoController {
             Categoria categoria = productoEntityVer.getCategoria();
 
             CategoriaDTO categoriaDTO = new CategoriaDTO(
-                    categoria.getID_Categoria(),
+                    categoria.getId(),
                     categoria.getCategoria()
             );
 
@@ -177,7 +177,7 @@ public class ProductoController {
 
             // Crear CategoriaDTO sin usar builder
             CategoriaDTO categoriaDTO = new CategoriaDTO(
-                    categoria.getID_Categoria(),
+                    categoria.getId(),
                     categoria.getCategoria()
             );
 
@@ -221,7 +221,7 @@ public class ProductoController {
                 Categoria categoria = producto.getCategoria();
                 // Crear CategoriaDTO sin usar builder
                 CategoriaDTO categoriaDTO = new CategoriaDTO(
-                        categoria.getID_Categoria(),
+                        categoria.getId(),
                         categoria.getCategoria()
                 );
 

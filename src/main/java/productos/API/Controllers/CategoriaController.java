@@ -66,7 +66,7 @@ public class CategoriaController {
 
         Categoria categoriaFinal = null;
 
-        try {if(categoriaService.existsById(categoriaDTO.getID_Categoria())){
+        try {if(categoriaService.existsById(categoriaDTO.getId())){
 
             String nombreMayuscula = categoriaDTO.getCategoria().toUpperCase();
             categoriaDTO.setCategoria(nombreMayuscula);
@@ -167,7 +167,7 @@ public class CategoriaController {
 
             // Crear CategoriaDTO sin usar builder
             CategoriaDTO categoriaDTO = new CategoriaDTO(
-                    categoria.getID_Categoria(),
+                    categoria.getId(),
                     categoria.getCategoria()
             );
 

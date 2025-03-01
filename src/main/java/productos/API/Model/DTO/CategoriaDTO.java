@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class CategoriaDTO extends productos.API.Model.Entity.Categoria implements Serializable {
 
 
-    private Integer ID_Categoria;
+    private Integer Id;
 
     @NonNull
     @NotBlank(message = "El nombre de la categoria es obligatorio!!!")
