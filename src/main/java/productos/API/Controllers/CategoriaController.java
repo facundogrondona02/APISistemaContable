@@ -105,10 +105,13 @@ public class CategoriaController {
 
         ArrayList<Categoria> categorias = new ArrayList<>();
 
+
         try{
             ids.forEach( id ->{
                   categorias.add(categoriaService.findById(id));
             });
+
+
             categorias.forEach(categoria -> {
                 categoriaService.delete(categoria);
             });

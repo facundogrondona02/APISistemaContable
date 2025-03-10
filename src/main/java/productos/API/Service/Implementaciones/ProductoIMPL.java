@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import productos.API.Model.DAO.ICategoriaDAO;
 import productos.API.Model.DAO.IProductoDAO;
 import productos.API.Model.DAO.IUserDAO;
+import productos.API.Model.DTO.CategoriaDTO;
 import productos.API.Model.DTO.ProductoDTO;
 import productos.API.Model.Entity.Categoria;
 import productos.API.Model.Entity.ProductoEntity;
@@ -15,6 +16,7 @@ import productos.API.Service.ICategoriaService;
 import productos.API.Service.IProductoService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductoIMPL implements IProductoService {

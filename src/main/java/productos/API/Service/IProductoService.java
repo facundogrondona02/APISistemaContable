@@ -1,9 +1,12 @@
 package productos.API.Service;
 
+import productos.API.Model.DTO.CategoriaDTO;
 import productos.API.Model.DTO.ProductoDTO;
+import productos.API.Model.Entity.Categoria;
 import productos.API.Model.Entity.ProductoEntity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IProductoService {
 
@@ -13,5 +16,5 @@ public interface IProductoService {
     ArrayList<ProductoEntity> findProByName(String producto);
     boolean existProById(Integer id);
     Iterable<ProductoEntity> findProAll();
-
+//    ArrayList<ProductoEntity> findProByCategoria(CategoriaDTO categoria);
 }
