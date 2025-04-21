@@ -16,6 +16,7 @@ import productos.API.Service.IVentasService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class VentasIMPL implements IVentasService {
@@ -109,5 +110,12 @@ public class VentasIMPL implements IVentasService {
     @Override
     public Ventas findProById(Integer id){
         return ventasDAO.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<Ventas> fincBytwoDates(Date start, Date end) {
+        String username = obtenerUsernameToken.findUserByToken();
+
+        return ventasDAO.findByTwoDates(start, end, username);
     }
 }

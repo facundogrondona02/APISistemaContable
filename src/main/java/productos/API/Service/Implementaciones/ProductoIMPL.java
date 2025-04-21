@@ -87,7 +87,9 @@ public class ProductoIMPL implements IProductoService {
     @Override
     public ArrayList<ProductoEntity> findProByName(String productoNombre) {
         String nombreEnMayusculas = productoNombre.toUpperCase();
-        Iterable<ProductoEntity> productos = productoDAO.findAll();
+        String username = obtenerUsernameToken.findUserByToken();
+        Iterable<ProductoEntity> productos =  productoDAO.findByUser_Username(username);
+
         ArrayList<ProductoEntity> productosArray = new ArrayList<>();
 
         for (ProductoEntity producto : productos) {

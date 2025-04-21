@@ -12,8 +12,14 @@ import productos.API.Model.Payload.Response;
 import productos.API.Service.IVentasService;
 import productos.API.Service.Implementaciones.VentasIMPL;
 
+import javax.xml.crypto.Data;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -64,11 +70,27 @@ public class VentasController {
         }
     }
 
-
+    public static Date convertirFecha(String fechaStr) throws ParseException {
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        return formato.parse(fechaStr);
+    }
     @GetMapping("ventas")
-    public ResponseEntity<?> findAll(){
+    public ResponseEntity<?> findAll(
+            @RequestParam(required = false)String start,
+            @RequestParam(required = false)String  end
+            ){
         try{
-            Iterable<Ventas> ventas = ventasService.findAll();
+            List<Ventas> ventas = StreamSupport
+                    .stream(ventasService.findAll().spliterator(), false)
+                    .collect(Collectors.toList());
+
+            if(start != "" && end != ""){
+            Date dateStart = convertirFecha(start);
+            Date dateEnd = convertirFecha(end);
+              if(dateStart != null && dateEnd != null) {
+                  ventas = ventasService.fincBytwoDates(dateStart, dateEnd);
+              }
+            }
             return new ResponseEntity<>(Response.builder().mensaje("Ventas encontradas correctamente").object(ventas).build(), HttpStatus.OK);
 
         }catch (Exception exception){
