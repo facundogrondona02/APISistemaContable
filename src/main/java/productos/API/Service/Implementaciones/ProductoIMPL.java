@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import productos.API.Model.DAO.ICategoriaDAO;
 import productos.API.Model.DAO.IProductoDAO;
 import productos.API.Model.DAO.IUserDAO;
+import productos.API.Model.DTO.CategoriaDTO;
 import productos.API.Model.DTO.ProductoDTO;
 import productos.API.Model.Entity.Categoria;
 import productos.API.Model.Entity.ProductoEntity;
@@ -15,6 +16,7 @@ import productos.API.Service.ICategoriaService;
 import productos.API.Service.IProductoService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductoIMPL implements IProductoService {
@@ -40,9 +42,9 @@ public class ProductoIMPL implements IProductoService {
 
             Categoria categoria = null;
             if (productoDTO.getCategoria() != null) {
-                categoria = categoriaDAO.findById(productoDTO.getCategoria().getID_Categoria()).orElse(null);
+                categoria = categoriaDAO.findById(productoDTO.getCategoria().getId()).orElse(null);
                 if (categoria == null) {
-                    throw new RuntimeException("Categoría no encontrada: " + productoDTO.getCategoria().getID_Categoria());
+                    throw new RuntimeException("Categoría no encontrada: " + productoDTO.getCategoria().getId());
                 }
             }
 
@@ -85,7 +87,9 @@ public class ProductoIMPL implements IProductoService {
     @Override
     public ArrayList<ProductoEntity> findProByName(String productoNombre) {
         String nombreEnMayusculas = productoNombre.toUpperCase();
-        Iterable<ProductoEntity> productos = productoDAO.findAll();
+        String username = obtenerUsernameToken.findUserByToken();
+        Iterable<ProductoEntity> productos =  productoDAO.findByUser_Username(username);
+
         ArrayList<ProductoEntity> productosArray = new ArrayList<>();
 
         for (ProductoEntity producto : productos) {

@@ -16,6 +16,9 @@ import productos.API.Model.Payload.Response;
 import productos.API.Service.IProductoService;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -45,7 +48,7 @@ public class ProductoController {
             Categoria categoria = productoEntityVer.getCategoria();
 
             CategoriaDTO categoriaDTO = new CategoriaDTO(
-                    categoria.getID_Categoria(),
+                    categoria.getId(),
                     categoria.getCategoria()
             );
 
@@ -134,10 +137,23 @@ public class ProductoController {
     public ResponseEntity<?> delete(@RequestBody ArrayList<Integer> ids ){
 
      ArrayList<ProductoEntity> productos = new ArrayList<>();
+
+//        ArrayList<ProductoEntity> productosConCategoria = new ArrayList<>();
+
         try{
             ids.forEach(id ->{
                   productos.add(productoService.findProById(id));
             });
+
+//            productos.forEach(producto ->{
+//                if (producto.getCategoria() != null){
+//                    productosConCategoria.add(producto);
+//                }
+//            });
+//            if(productosConCategoria.size() != 0 && trueOrFalse == false){
+//                return new ResponseEntity<>(Response.builder().mensaje("Ha!!!").object(productosConCategoria).build(), HttpStatus.OK);
+//            }
+
             productos.forEach(producto -> {
                 if(producto != null) {
                     productoService.delete(producto);
@@ -156,9 +172,25 @@ public class ProductoController {
 
 
     @GetMapping("productos")
-    public ResponseEntity<?> findProAll(){
+    public ResponseEntity<?> findProAll(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String categoria
+    ){
 
-        Iterable<ProductoEntity> productos = productoService.findProAll();
+        List<ProductoEntity> productos = StreamSupport
+                .stream(productoService.findProAll().spliterator(), false)
+                .collect(Collectors.toList());
+        if(nombre != "" ){
+                  productos = productoService.findProByName(nombre);
+        }
+        if(categoria != ""){
+
+            productos = productos.stream()
+                    .filter(productoEntity -> productoEntity.getCategoria().getCategoria().equalsIgnoreCase(categoria))
+                    .collect(Collectors.toList());
+
+           }
+
         if(productos != null){
             return new ResponseEntity<>(Response.builder().mensaje("Productos encontrados con exito!!!").object(productos).build(),HttpStatus.OK);
         }else{
@@ -166,6 +198,8 @@ public class ProductoController {
 
         }
     }
+
+
 
     @GetMapping("producto/{id}")
     public ResponseEntity<?> findProId(@PathVariable Integer id){
@@ -177,7 +211,7 @@ public class ProductoController {
 
             // Crear CategoriaDTO sin usar builder
             CategoriaDTO categoriaDTO = new CategoriaDTO(
-                    categoria.getID_Categoria(),
+                    categoria.getId(),
                     categoria.getCategoria()
             );
 
@@ -219,9 +253,8 @@ public class ProductoController {
             for(ProductoEntity producto: productosEntity){
 
                 Categoria categoria = producto.getCategoria();
-                // Crear CategoriaDTO sin usar builder
                 CategoriaDTO categoriaDTO = new CategoriaDTO(
-                        categoria.getID_Categoria(),
+                        categoria.getId(),
                         categoria.getCategoria()
                 );
 
